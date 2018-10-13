@@ -10,7 +10,7 @@ class Soldier {
     }
 
     receiveDamage(damage) {
-
+        this.health -= damage;
     }
 }
 // var soldier = new Soldier(5, 10);
@@ -44,18 +44,52 @@ class Saxon extends Soldier {
     }
 
     recieveDamage(damage){
-        console.log(this)
-        console.log(this.health)
         this.health -= damage;
-        console.log(this.health)
         if(this.health > 0) return ("A Saxon has received " + damage + " points of damage");
         else return ("A Saxon has died in act of combat");    
     }
 }
 
-var mister = new Saxon(5, 10);
-
-console.log(mister.recieveDamage(50));
-
 // War
-class War {}
+class War {
+    constructor(){
+        this.vikingArmy = [];
+        this.saxonArmy = [];
+    }
+    addViking(Viking){
+        this.vikingArmy.push(Viking);
+    }
+
+    addSaxon(Saxon){
+        this.saxonArmy.push(Saxon);
+    }
+
+    vikingAttack(){
+        var place = Math.floor(Math.random()*this.saxonArmy.length)
+        var vikingAttacker = this.vikingArmy[Math.floor(Math.random()*this.vikingArmy.length)];
+        var saxonDefender = this.saxonArmy[place];
+        var BattleResult = saxonDefender.recieveDamage(vikingAttacker.strength);
+        if (BattleResult === "A Saxon has died in act of combat") this.saxonArmy.splice(this.saxonArmy[place], 1); 
+        return BattleResult;
+    }
+
+    saxonAttack(){
+        var place = Math.floor(Math.random()*this.vikingArmy.length);
+        var saxonAttacker = this.saxonArmy[Math.floor(Math.random()*this.saxonArmy.length)];
+        var vikingDefender = this.vikingArmy[place];
+        var BattleResult = vikingDefender.receiveDamage(saxonAttacker.strength);
+        if (BattleResult.includes("died")) this.vikingArmy.splice(this.vikingArmy[place], 1); 
+        return BattleResult;
+    }
+    
+    showStatus(){
+        if (this.saxonArmy.length === 0) 
+            return "Vikings have won the war of the century!";
+        else if (this.vikingArmy.length === 0)
+            return "Saxons have fought for their lives and survive another day...";
+        else
+            return "Vikings and Saxons are still in the thick of battle.";
+    }
+}
+
+var war = new War;
